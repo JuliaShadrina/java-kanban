@@ -1,22 +1,21 @@
 package ru.yandex.model;
 
 import ru.yandex.model.conctants.Status;
-import ru.yandex.model.conctants.Type;
 
 public class Subtask extends Intent {
-    protected int epicId; // храним к какому эпику относится
+    private int epicId; // храним к какому эпику относится
 
     public Subtask(String summary, String description) {
-        super(Type.SUBTASK, summary, description);
+        super(summary, description);
     }
 
     public Subtask(String summary, String description, Status status, int epicId) {
-        super(Type.SUBTASK, summary, description, status);
+        super(summary, description, status);
         this.epicId = epicId;
     }
 
     public Subtask(int id, String summary, String description, Status status, int epicId) {
-        super(id, Type.SUBTASK, summary, description, status);
+        super(id, summary, description, status);
         this.epicId = epicId;
     }
 

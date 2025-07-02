@@ -20,6 +20,7 @@ public class Main {
         System.out.println(taskManager.addEpic(epic1));
         System.out.println(taskManager.addEpic(epic2));
         System.out.println(taskManager.addEpic(epic3));
+        System.out.println(taskManager.addEpic(epic4));
         // печатаем список эпиков
         System.out.println("Список эпиков:");
         System.out.println(taskManager.getEpics());

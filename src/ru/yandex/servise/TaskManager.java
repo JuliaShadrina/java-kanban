@@ -6,69 +6,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-    protected HashMap<Integer, Epic> epics = new HashMap<>();
-    protected HashMap<Integer, Task> tasks = new HashMap<>();
-    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    public int generationId = 0;
+    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private int generationId = 0;
 
     // Получение списков всех типов задач
-    public HashMap<Integer, Epic> getEpics() { // список эпиков
+    public ArrayList<Epic> getEpics() { // список эпиков
         if (epics.size() != 0) {
-            return epics;
+            return new ArrayList<>(epics.values());
         } else {
-            return new HashMap<>();
+            return new ArrayList<>();
         }
     }
 
-    public HashMap<Integer, Task> getTasks() { // список таск
+    public ArrayList<Task> getTasks() { // список таск
         if (tasks.size() != 0) {
-            return tasks;
+            return new ArrayList<>(tasks.values());
         } else {
-            return new HashMap<>();
+            return new ArrayList<>();
         }
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() { // список сабтаск
+    public ArrayList<Subtask> getSubtasks() { // список сабтаск
         if (subtasks.size() != 0) {
-            return subtasks;
+            return new ArrayList<>(subtasks.values());
         } else {
-            return new HashMap<>();
-        }
-    }
-    // Проверка, что новая задача любого типа не пустая и что Id не совпадает с имеющимися
-    public boolean isNewIntent(Intent newIntent) {
-        if (newIntent != null && !tasks.containsKey(newIntent.getId()) && !subtasks.containsKey(newIntent.getId())
-                && !epics.containsKey(newIntent.getId())){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    // Обновление статуса эпика
-    private void updateEpicStatus(Epic epic) {
-        boolean isNew = true;
-        boolean isDone = true;
-
-        if (epic.getSubtasksIds().size() == 0) {
-            epic.setStatus(Status.NEW);
-            return;
-        }
-        for (Integer epicSubtask : epic.getSubtasksIds()) {
-            Status status = subtasks.get(epicSubtask).getStatus();
-            if (status != Status.NEW) {
-                isNew = false;
-            }
-            if (status != Status.DONE) {
-                isDone = false;
-            }
-        }
-        if (isNew) {
-            epic.setStatus(Status.NEW);
-        } else if (isDone) {
-            epic.setStatus(Status.DONE);
-        } else {
-            epic.setStatus(Status.IN_PROGRESS);
+            return new ArrayList<>();
         }
     }
 
@@ -77,8 +41,7 @@ public class TaskManager {
     public Epic addEpic(Epic newEpic) {
         if (isNewIntent(newEpic)) {
             if (newEpic.getId() == 0) {
-                int epicId = ++generationId;
-                newEpic.setId(epicId);
+                newEpic.setId(generateId());
             }
             epics.put(newEpic.getId(), newEpic);
             updateEpicStatus(newEpic);
@@ -91,8 +54,7 @@ public class TaskManager {
     public Task addTask(Task newTask) {
         if (isNewIntent(newTask)) {
             if (newTask.getId() == 0) {
-                int taskId = ++generationId;
-                newTask.setId(taskId);
+                newTask.setId(generateId());
             }
             tasks.put(newTask.getId(), newTask);
             return newTask;
@@ -104,8 +66,7 @@ public class TaskManager {
     public Subtask addSubtask(Subtask newSubtask) {
         if (isNewIntent(newSubtask)) {
             if (newSubtask.getId() == 0) {
-                int subtaskId = ++generationId;
-                newSubtask.setId(subtaskId);
+                newSubtask.setId(generateId());;
             }
             Epic epic = epics.get(newSubtask.getEpicId());
             if (epic != null) {
@@ -264,5 +225,46 @@ public class TaskManager {
             updateEpicStatus(epic);
         }
         subtasks.clear();
+    }
+
+    // Проверка, что новая задача любого типа не пустая и что Id не совпадает с имеющимися
+    private boolean isNewIntent(Intent newIntent) {
+        if (newIntent != null && !tasks.containsKey(newIntent.getId()) && !subtasks.containsKey(newIntent.getId())
+                && !epics.containsKey(newIntent.getId())){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Обновление статуса эпика
+    private void updateEpicStatus(Epic epic) {
+        boolean isNew = true;
+        boolean isDone = true;
+
+        if (epic.getSubtasksIds().size() == 0) {
+            epic.setStatus(Status.NEW);
+            return;
+        }
+        for (Integer epicSubtask : epic.getSubtasksIds()) {
+            Status status = subtasks.get(epicSubtask).getStatus();
+            if (status != Status.NEW) {
+                isNew = false;
+            }
+            if (status != Status.DONE) {
+                isDone = false;
+            }
+        }
+        if (isNew) {
+            epic.setStatus(Status.NEW);
+        } else if (isDone) {
+            epic.setStatus(Status.DONE);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
+        }
+    }
+
+    private int generateId() {
+        return ++generationId;
     }
 }

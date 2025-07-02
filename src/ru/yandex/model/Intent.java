@@ -1,53 +1,39 @@
 package ru.yandex.model;
 
 import ru.yandex.model.conctants.Status;
-import ru.yandex.model.conctants.Type;
 
 import java.util.Objects;
 
 public abstract class Intent {
-    protected int id;
-    protected Type type;
-    protected String summary;
-    protected String description;
-    protected Status status;
+    private int id;
+    private String summary;
+    private String description;
+    private Status status;
 
-    public Intent(Type type, String summary, String description) {
-        this.type = type;
+    public Intent(String summary, String description) {
         this.summary = summary;
         this.description = description;
         this.status = status;
     }
 
-    public Intent(int id, Type type, String summary, String description) {
+    public Intent(int id, String summary, String description) {
         this.id = id;
-        this.type = type;
         this.summary = summary;
         this.description = description;
         this.status = status;
     }
 
-    public Intent(Type type, String summary, String description, Status status) {
-        this.type = type;
+    public Intent(String summary, String description, Status status) {
         this.summary = summary;
         this.description = description;
         this.status = status;
     }
 
-    public Intent(int id, Type type, String summary, String description, Status status) {
+    public Intent(int id, String summary, String description, Status status) {
         this.id = id;
-        this.type = type;
         this.summary = summary;
         this.description = description;
         this.status = status;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public String getSummary() {

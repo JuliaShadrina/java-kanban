@@ -1,26 +1,25 @@
 package ru.yandex.model;
 
 import ru.yandex.model.conctants.Status;
-import ru.yandex.model.conctants.Type;
 import java.util.ArrayList;
 
 public class Epic extends Intent {
-    protected ArrayList<Integer> subtasksIds = new ArrayList<>(); // храним список сабтаск
+    private ArrayList<Integer> subtasksIds = new ArrayList<>(); // храним список сабтаск
 
     public Epic(String summary, String description) {
-        super(Type.EPIC, summary, description);
+        super(summary, description);
     }
 
     public Epic(String summary, String description, Status status) {
-        super(Type.EPIC, summary, description, status);
+        super(summary, description, status);
     }
 
     public Epic(int id, String summary, String description) {
-        super(id, Type.EPIC, summary, description);
+        super(id, summary, description);
     }
 
     public Epic(int id, String summary, String description, Status status, ArrayList<Integer> subtasksIds) {
-        super(id, Type.EPIC, summary, description, status);
+        super(id, summary, description, status);
         this.subtasksIds = subtasksIds;
     }
 
