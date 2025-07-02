@@ -73,14 +73,11 @@ public abstract class Intent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Intent intent = (Intent) o;
-        return Objects.equals(summary, intent.summary) &&
-                Objects.equals(description, intent.description) &&
-                Objects.equals(id, intent.id) &&
-                Objects.equals(status, intent.status);
+        return id == intent.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(summary, description, id, status);
+        return Objects.hash(id);
     }
 }

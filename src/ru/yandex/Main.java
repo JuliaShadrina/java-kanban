@@ -51,9 +51,9 @@ public class Main {
         System.out.println("Эпик по id:");
         System.out.println(taskManager.getEpicById(1));
         System.out.println("Таска по id:");
-        System.out.println(taskManager.getTaskById(4));
+        System.out.println(taskManager.getTaskById(5));
         System.out.println("Сабтаска по id:");
-        System.out.println(taskManager.getSubtaskById(6));
+        System.out.println(taskManager.getSubtaskById(9));
         // ещё раз список эпиков с обновлёнными статусами
         System.out.println("Ещё раз список эпиков с новыми статусами:");
         System.out.println(taskManager.getEpics());
@@ -66,7 +66,7 @@ public class Main {
         System.out.println("Обновление задач каждого типа:");
         Epic epic4upd = new Epic(4, "Эпик4обновлённый", "ОписаниеЭпика4обновлённое");
         System.out.println(taskManager.updateEpic(epic4upd));
-        Task task1upd = new Task(4,"Задача1обновлённая", "ОписаниеЗадачи1обновлённое", Status.DONE);
+        Task task1upd = new Task(5,"Задача1обновлённая", "ОписаниеЗадачи1обновлённое", Status.DONE);
         System.out.println(taskManager.updateTask(task1upd));
         Subtask subtask4upd = new Subtask(9,"Подзадача4обновлённая", "ОписаниеПодзадачи4обновлённое", Status.DONE, 2);
         System.out.println(taskManager.updateSubtask(subtask4upd));
