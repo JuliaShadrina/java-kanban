@@ -48,6 +48,7 @@ public class Main {
         // печатаем список сабтаск
         System.out.println("Список сабтаск:");
         System.out.println(taskManager.getSubtasks());
+        // получаем объекты по id
         System.out.println("Эпик по id:");
         System.out.println(taskManager.getEpicById(1));
         System.out.println("Таска по id:");
@@ -79,10 +80,10 @@ public class Main {
         System.out.println(taskManager.getEpics());
         System.out.println("Удаляем эпик по id = 1:");
         taskManager.removeEpicById(1);
-        System.out.println("Удаляем таску по id = 4:");
-        taskManager.removeTaskById(4);
-        System.out.println("Удаляем сабтаску по id = 6:");
-        taskManager.removeSubtaskById(6);
+        System.out.println("Удаляем таску по id = 6:");
+        taskManager.removeTaskById(6);
+        System.out.println("Удаляем сабтаску по id = 8:");
+        taskManager.removeSubtaskById(8);
         // удаляем все эпики
         //taskManager.deleteAllEpics();
         System.out.println("Список эпиков:");
