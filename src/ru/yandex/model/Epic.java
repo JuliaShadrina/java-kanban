@@ -14,6 +14,10 @@ public class Epic extends Intent {
         super(summary, description, status);
     }
 
+    public Epic(int id, String summary, String description, Status status) {
+        super(id, summary, description, status);
+    }
+
     public Epic(int id, String summary, String description) {
         super(id, summary, description);
     }
