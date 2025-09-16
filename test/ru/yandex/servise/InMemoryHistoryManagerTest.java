@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryHistoryManagerTest {
 
     @Test
-    void add() {
+    void addTest() {
         HistoryManager history = Managers.getDefaultHistory();
         Task task = new Task(1, "test", "desc", Status.NEW);
 
@@ -25,7 +25,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldLimitHistorySize() {
+    void shouldLimitHistorySizeTest() {
         HistoryManager history = Managers.getDefaultHistory();
 
         // Добавляем 11 задач
@@ -40,7 +40,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldStoreDifferentTaskTypes() {
+    void shouldStoreDifferentTaskTypesTest() {
         HistoryManager history = Managers.getDefaultHistory();
         Task task = new Task(1, "task", "desc", Status.NEW);
         Epic epic = new Epic(2, "epic", "desc");

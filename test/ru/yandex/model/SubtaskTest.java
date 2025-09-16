@@ -15,14 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class SubtaskTest {
     private static TaskManager inMemoryTaskManager;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void beforeEach() {
         inMemoryTaskManager = Managers.getDefault();
     }
 
     @Test
-    void addNewSubtask() {
-        Subtask subtask = new Subtask("Подзадача1", "ОписаниеПодзадачи1", Status.NEW, 1);
+    void addNewSubtaskTest() {
+        Epic epic = new Epic("Test Epic", "Test Epic description");
+        inMemoryTaskManager.addEpic(epic);
+        Subtask subtask = new Subtask("Подзадача1", "ОписаниеПодзадачи1", Status.NEW, epic.getId());
 
         final Subtask savedSubtask = inMemoryTaskManager.addSubtask(subtask);
         assertNotNull(savedSubtask, "Сабтаска не найдена.");
@@ -36,13 +38,13 @@ class SubtaskTest {
 
 
     @Test
-    void subtaskCannotBeItsOwnEpic() {
+    void subtaskCannotBeItsOwnEpicTest() {
         Epic epic = new Epic("Test Epic", "Test Epic description");
         inMemoryTaskManager.addEpic(epic);
-        // Создаем подзадачу, где epicId равен id самой подзадачи
+        // Создаем подзадачу, где epicId равен id самой подзадачи и равен Id созданного эпика
         Subtask subtask = new Subtask("Invalid Subtask", "Invalid description",
-                Status.NEW, 1); // Устанавливаем epicId = 1
-        subtask.setId(1); // Устанавливаем id подзадачи тоже 1
+                Status.NEW, epic.getId()); // Устанавливаем epicId = Id добавленного эпика
+        subtask.setId(epic.getId()); // Устанавливаем id подзадачи тоже = Id добавленного эпика
 
         // Пытаемся добавить подзадачу
         Subtask result = inMemoryTaskManager.addSubtask(subtask);

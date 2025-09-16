@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
     private static TaskManager inMemoryTaskManager;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void beforeEach() {
         inMemoryTaskManager = Managers.getDefault();
     }
 
     @Test
-    void addNewEpic() {
+    void addNewEpicTest() {
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", Status.NEW);
 
         final Epic savedEpic = inMemoryTaskManager.addEpic(epic);
@@ -33,7 +33,7 @@ class EpicTest {
     }
 
     @Test
-    void epicCannotBeAddedToItselfAsSubtask() {
+    void epicCannotBeAddedToItselfAsSubtaskTest() {
         Epic epic1 = new Epic(1, "Эпик1", "ОписаниеЭпика1");
         Subtask subtask1 = new Subtask(1, "Подзадача1", "ОписаниеПодзадачи1", Status.NEW, 1);
         // epicId == own ID

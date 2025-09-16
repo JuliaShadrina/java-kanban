@@ -15,13 +15,13 @@ class InMemoryTaskManagerTest {
     private Epic epic;
 
     @BeforeEach
-    void setup() {
+    void beforeEach() {
         manager = new InMemoryTaskManager();
         epic = manager.addEpic(new Epic("Epic summary", "Epic description"));
     }
 
     @Test
-    void shouldSetStatusNewWhenAllSubtasksAreNew() {
+    void shouldSetStatusNewWhenAllSubtasksAreNewTest() {
         manager.addSubtask(new Subtask("Sub 1", "Desc", Status.NEW, epic.getId()));
         manager.addSubtask(new Subtask("Sub 2", "Desc", Status.NEW, epic.getId()));
 
@@ -30,7 +30,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldSetStatusDoneWhenAllSubtasksAreDone() {
+    void shouldSetStatusDoneWhenAllSubtasksAreDoneTest() {
         manager.addSubtask(new Subtask("Sub 1", "Desc", Status.DONE, epic.getId()));
         manager.addSubtask(new Subtask("Sub 2", "Desc", Status.DONE, epic.getId()));
 
@@ -39,7 +39,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldSetStatusInProgressWhenMixedStatuses() {
+    void shouldSetStatusInProgressWhenMixedStatusesTest() {
         manager.addSubtask(new Subtask("Sub 1", "Desc", Status.NEW, epic.getId()));
         manager.addSubtask(new Subtask("Sub 2", "Desc", Status.DONE, epic.getId()));
 
@@ -48,7 +48,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldSetStatusInProgressWhenAllSubtasksInProgress() {
+    void shouldSetStatusInProgressWhenAllSubtasksInProgressTest() {
         manager.addSubtask(new Subtask("Sub 1", "Desc", Status.IN_PROGRESS, epic.getId()));
         manager.addSubtask(new Subtask("Sub 2", "Desc", Status.IN_PROGRESS, epic.getId()));
 
@@ -57,13 +57,13 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldSetStatusNewWhenNoSubtasks() {
+    void shouldSetStatusNewWhenNoSubtasksTest() {
         Epic updatedEpic = manager.getEpicById(epic.getId());
         assertEquals(Status.NEW, updatedEpic.getStatus());
     }
 
     @Test
-    void shouldUpdateEpicStatusWhenSubtaskIsDeleted() {
+    void shouldUpdateEpicStatusWhenSubtaskIsDeletedTest() {
         // Добавим DONE и IN_PROGRESS сабтаски → эпик должен быть IN_PROGRESS
         Subtask sub1 = manager.addSubtask(new Subtask("Sub 1", "Desc", Status.DONE, epic.getId()));
         Subtask sub2 = manager.addSubtask(new Subtask("Sub 2", "Desc", Status.IN_PROGRESS, epic.getId()));

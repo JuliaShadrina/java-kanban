@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ManagersTest {
 
     @Test
-    void defaultManagerShouldBeInitialized() {
+    void defaultManagerShouldBeInitializedTest() {
         TaskManager manager = Managers.getDefault();
         assertNotNull(manager);
     }

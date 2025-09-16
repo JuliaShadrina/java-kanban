@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskTest {
     private static TaskManager inMemoryTaskManager;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void beforeEach() {
         inMemoryTaskManager = Managers.getDefault();
     }
 
     @Test
-    void addNewTask() {
+    void addNewTaskTest() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
 
         final Task savedTask = inMemoryTaskManager.addTask(task);
