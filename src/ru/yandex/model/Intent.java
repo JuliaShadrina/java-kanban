@@ -80,4 +80,6 @@ public abstract class Intent {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }
+

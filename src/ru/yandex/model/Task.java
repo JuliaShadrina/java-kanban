@@ -20,4 +20,5 @@ public class Task extends Intent {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' + '}';
     }
+
 }

@@ -19,7 +19,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return new ArrayList<>();
         }
+
     }
+
     @Override
     public List<Task> getTasks() { // список таск
         if (tasks.size() != 0) {
@@ -27,7 +29,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return new ArrayList<>();
         }
+
     }
+
     @Override
     public List<Subtask> getSubtasks() { // список сабтаск
         if (subtasks.size() != 0) {
@@ -35,6 +39,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return new ArrayList<>();
         }
+
     }
 
     // Добавление в систему каждого типа задач,
@@ -51,7 +56,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
+
     @Override
     public Task addTask(Task newTask) {
         if (isNewIntent(newTask)) {
@@ -63,12 +70,15 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
+
     @Override
     public Subtask addSubtask(Subtask newSubtask) {
         if (isNewIntent(newSubtask)) {
             if (newSubtask.getId() == 0) {
-                newSubtask.setId(generateId());;
+                newSubtask.setId(generateId());
+                ;
             }
             Epic epic = epics.get(newSubtask.getEpicId());
             if (epic != null) {
@@ -80,6 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
 
     // Список сабтаск эпика
@@ -95,6 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return new ArrayList<>();
         }
+
     }
 
     // Обновление каждого типа задач
@@ -109,7 +121,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
+
     @Override
     public Task updateTask(Task updateTask) {
         if (updateTask != null && tasks.containsKey(updateTask.getId())) {
@@ -119,7 +133,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
+
     @Override
     public Subtask updateSubtask(Subtask updateSubtask) {
         if (updateSubtask != null && subtasks.containsKey(updateSubtask.getId())) {
@@ -148,6 +164,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
 
     // Получение каждого типа задач по id
@@ -160,7 +177,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
+
     @Override
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
@@ -170,7 +189,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
+
     @Override
     public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
@@ -180,6 +201,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return null;
         }
+
     }
 
     // Удаление каждого типа задач по id
@@ -195,13 +217,16 @@ public class InMemoryTaskManager implements TaskManager {
             epics.remove(id);
         }
     }
+
     @Override
     public void removeTaskById(int id) {
         if (tasks.containsKey(id)) {
             historyManager.removeFromHistory(id); // сначала из истории удаляем каждую таску
             tasks.remove(id);
         }
+
     }
+
     @Override
     public void removeSubtaskById(int id) {
         if (subtasks.containsKey(id)) {
@@ -215,6 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.removeFromHistory(id); // сначала из истории удаляем сабтаску
             subtasks.remove(id);
         }
+
     }
 
     // Удаление всех задач каждого типа
@@ -230,6 +256,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.removeFromHistory(epicId); // из истории удаляем каждый эпик
         }
         epics.clear();
+
     }
 
     @Override
@@ -239,6 +266,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.removeFromHistory(taskId); // сначала из истории удаляем каждую таску
         }
         tasks.clear();
+
     }
 
     @Override
@@ -252,6 +280,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.removeFromHistory(subtaskId); // сначала из истории удаляем каждую сабтаску
         }
         subtasks.clear();
+
     }
 
     // Возвращает историю - полный список просмотренных задач без дубликатов
@@ -263,11 +292,12 @@ public class InMemoryTaskManager implements TaskManager {
     // Проверка, что новая задача любого типа не пустая и что Id не совпадает с имеющимися
     private boolean isNewIntent(Intent newIntent) {
         if (newIntent != null && !tasks.containsKey(newIntent.getId()) && !subtasks.containsKey(newIntent.getId())
-                && !epics.containsKey(newIntent.getId())){
+                && !epics.containsKey(newIntent.getId())) {
             return true;
         } else {
             return false;
         }
+
     }
 
     // Обновление статуса эпика
@@ -295,6 +325,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
+
     }
 
     // Генерация id
