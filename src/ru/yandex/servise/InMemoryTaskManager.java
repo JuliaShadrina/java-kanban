@@ -2,16 +2,14 @@ package ru.yandex.servise;
 
 import ru.yandex.model.*;
 import ru.yandex.model.conctants.Status;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager{
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private int generationId = 0;
-    private HistoryManager historyManager = Managers.getDefaultHistory(); // история - последние 10 просмотренных задач
+    private HistoryManager historyManager = Managers.getDefaultHistory(); // история полная история просмотров
 
     // Получение списков всех типов задач
     @Override
@@ -157,7 +155,7 @@ public class InMemoryTaskManager implements TaskManager{
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
         if (epic != null && epics.containsKey(id)) {
-            historyManager.add(epic);
+            historyManager.addToHistory(epic);
             return epic;
         } else {
             return null;
@@ -167,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager{
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
         if (task != null && tasks.containsKey(id)) {
-            historyManager.add(task);
+            historyManager.addToHistory(task);
             return task;
         } else {
             return null;
@@ -177,7 +175,7 @@ public class InMemoryTaskManager implements TaskManager{
     public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
         if (subtask != null && subtasks.containsKey(id)) {
-            historyManager.add(subtask);
+            historyManager.addToHistory(subtask);
             return subtask;
         } else {
             return null;
@@ -190,14 +188,17 @@ public class InMemoryTaskManager implements TaskManager{
         if (epics.containsKey(id)) {
             List<Integer> subtaskIds = epics.get(id).getSubtasksIds();
             for (Integer subtaskId : subtaskIds) {
+                historyManager.removeFromHistory(subtaskId); // сначала из истории удаляем каждую сабтаску
                 subtasks.remove(subtaskId);
             }
+            historyManager.removeFromHistory(id); // сначала из истории удаляем эпик
             epics.remove(id);
         }
     }
     @Override
     public void removeTaskById(int id) {
         if (tasks.containsKey(id)) {
+            historyManager.removeFromHistory(id); // сначала из истории удаляем каждую таску
             tasks.remove(id);
         }
     }
@@ -211,6 +212,7 @@ public class InMemoryTaskManager implements TaskManager{
                 subtaskIds.remove((Integer) id);
                 updateEpicStatus(epic);
             }
+            historyManager.removeFromHistory(id); // сначала из истории удаляем сабтаску
             subtasks.remove(id);
         }
     }
@@ -220,27 +222,39 @@ public class InMemoryTaskManager implements TaskManager{
     public void deleteAllEpics() {
         for (Epic epic : epics.values()) {
             int epicId = epic.getId();
-            List<Integer> subtaskIds = epics.get(epicId).getSubtasksIds();
+            List<Integer> subtaskIds = epics.get(epicId).getSubtasksIds(); // получаем список id сабтаск каждого эпика
             for (Integer subtaskId : subtaskIds) {
-                subtasks.remove(subtaskId);
+                historyManager.removeFromHistory(subtaskId); // сначала из истории удаляем каждую сабтаску
+                subtasks.remove(subtaskId); // потом из системы удаляем
             }
+            historyManager.removeFromHistory(epicId); // из истории удаляем каждый эпик
         }
         epics.clear();
     }
+
     @Override
     public void deleteAllTasks() {
+        for (Task task : tasks.values()) {
+            int taskId = task.getId();
+            historyManager.removeFromHistory(taskId); // сначала из истории удаляем каждую таску
+        }
         tasks.clear();
     }
+
     @Override
     public void deleteAllSubtasks() {
         for (Epic epic : epics.values()) {
-            epic.getSubtasksIds().clear();
+            epic.getSubtasksIds().clear(); // у всех эпиков очищаем список ссылок на сабтаски
             updateEpicStatus(epic);
+        }
+        for (Subtask subtask : subtasks.values()) {
+            int subtaskId = subtask.getId();
+            historyManager.removeFromHistory(subtaskId); // сначала из истории удаляем каждую сабтаску
         }
         subtasks.clear();
     }
 
-    // Возвращает историю - последние 10 просмотренных задач
+    // Возвращает историю - полный список просмотренных задач без дубликатов
     @Override
     public List<Intent> getHistory() {
         return historyManager.getHistory();

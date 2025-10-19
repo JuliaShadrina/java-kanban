@@ -8,5 +8,8 @@ public interface HistoryManager {
 
     public List<Intent> getHistory();
 
-    public Intent add(Intent intent);
+    public Intent addToHistory(Intent intent);
+
+    void removeFromHistory(int id);
+
 }

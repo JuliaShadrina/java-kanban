@@ -60,6 +60,14 @@ public class Main {
         System.out.println(inMemoryTaskManager.getSubtaskById(9));
         System.out.println("История просмотров:");
         System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println("ещё раз Таска по id = 5:");
+        System.out.println(inMemoryTaskManager.getTaskById(5));
+        System.out.println("История просмотров без дубликата Таски с id = 5");
+        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println("ещё раз Эпик по id = 1:");
+        System.out.println(inMemoryTaskManager.getEpicById(1));
+        System.out.println("История просмотров без дубликата Эпика с id = 1");
+        System.out.println(inMemoryTaskManager.getHistory());
         // ещё раз список эпиков с обновлёнными статусами
         System.out.println("Ещё раз список эпиков с новыми статусами:");
         System.out.println(inMemoryTaskManager.getEpics());
@@ -83,24 +91,30 @@ public class Main {
         System.out.println(inMemoryTaskManager.getSubtasksByEpic(3));
         System.out.println("Ещё раз список эпиков с новыми статусами:");
         System.out.println(inMemoryTaskManager.getEpics());
-        System.out.println("Удаляем эпик по id = 1:");
-        inMemoryTaskManager.removeEpicById(1);
+        System.out.println("Удаляем эпик по id = 3:");
+        inMemoryTaskManager.removeEpicById(3);
         System.out.println("Удаляем таску по id = 6:");
         inMemoryTaskManager.removeTaskById(6);
         System.out.println("Удаляем сабтаску по id = 8:");
         inMemoryTaskManager.removeSubtaskById(8);
-        // удаляем все эпики
-        //taskManager.deleteAllEpics();
-        System.out.println("Список эпиков:");
-        System.out.println(inMemoryTaskManager.getEpics());
-        // удаляем все таски
-        //taskManager.deleteAllTasks();
+        System.out.println("Удаляем все таски");
+        inMemoryTaskManager.deleteAllTasks();
         System.out.println("Список таск:");
         System.out.println(inMemoryTaskManager.getTasks());
-        // удаляем все сабтаски
-        //taskManager.deleteAllSubtasks();
+        System.out.println("Таски удалились из истории тоже:");
+        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println("Удаляем все сабтаски");
+        inMemoryTaskManager.deleteAllSubtasks();
         System.out.println("Список сабтаск:");
         System.out.println(inMemoryTaskManager.getSubtasks());
+        System.out.println("Сабтаски удалились из истории тоже:");
+        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println("Удаляем все эпики");
+        inMemoryTaskManager.deleteAllEpics();
+        System.out.println("Список эпиков:");
+        System.out.println(inMemoryTaskManager.getEpics());
+        System.out.println("История пуста");
+        System.out.println(inMemoryTaskManager.getHistory());
         // удаляем все эпики
     }
 }
