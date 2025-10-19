@@ -2,7 +2,7 @@ package ru.yandex.servise;
 
 public class Managers { // фабрика менеджеров
 
-    public static TaskManager getDefault(){
+    public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 
