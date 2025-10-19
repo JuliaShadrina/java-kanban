@@ -6,7 +6,7 @@ import ru.yandex.servise.*;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         System.out.println("Поехали!");
         TaskManager inMemoryTaskManager = Managers.getDefault();
         // Создаём эпики
@@ -117,4 +117,5 @@ public class Main {
         System.out.println(inMemoryTaskManager.getHistory());
         // удаляем все эпики
     }
+
 }
