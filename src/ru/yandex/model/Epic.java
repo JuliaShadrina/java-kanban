@@ -44,4 +44,5 @@ public class Epic extends Intent {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' + '}';
     }
+
 }

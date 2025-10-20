@@ -52,4 +52,5 @@ public interface TaskManager {
     public void deleteAllSubtasks();
 
     List<Intent> getHistory();
+
 }

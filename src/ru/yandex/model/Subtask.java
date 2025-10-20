@@ -32,4 +32,5 @@ public class Subtask extends Intent {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' + '}';
     }
+
 }
