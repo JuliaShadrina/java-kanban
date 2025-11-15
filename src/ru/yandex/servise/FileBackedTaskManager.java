@@ -2,6 +2,7 @@ package ru.yandex.servise;
 
 import ru.yandex.model.*;
 import ru.yandex.model.conctants.*;
+import ru.yandex.servise.exception.ManagerSaveException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -110,7 +111,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка сохранения в файл: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка сохранения в файл: " + e.getMessage());
         }
     }
 
