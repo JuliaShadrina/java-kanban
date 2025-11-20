@@ -3,7 +3,6 @@ package ru.yandex.model;
 import ru.yandex.model.conctants.Status;
 
 import java.util.Objects;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class Intent {
