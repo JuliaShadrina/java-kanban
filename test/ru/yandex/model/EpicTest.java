@@ -21,6 +21,8 @@ class EpicTest {
     @Test
     void addNewEpicTest() {
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", Status.NEW);
+        epic.setDuration(120);
+        epic.setStartTime(java.time.LocalDateTime.of(2024, 1, 1, 10, 0));
 
         final Epic savedEpic = inMemoryTaskManager.addEpic(epic);
         assertNotNull(savedEpic, "Эпик не найден.");
@@ -35,7 +37,12 @@ class EpicTest {
     @Test
     void epicCannotBeAddedToItselfAsSubtaskTest() {
         Epic epic1 = new Epic(1, "Эпик1", "ОписаниеЭпика1");
+        epic1.setDuration(180);
+        epic1.setStartTime(java.time.LocalDateTime.of(2024, 1, 1, 9, 0));
+
         Subtask subtask1 = new Subtask(1, "Подзадача1", "ОписаниеПодзадачи1", Status.NEW, 1);
+        subtask1.setDuration(60);
+        subtask1.setStartTime(java.time.LocalDateTime.of(2024, 1, 1, 11, 0));
         // epicId == own ID
 
         inMemoryTaskManager.addEpic(epic1);
@@ -44,4 +51,5 @@ class EpicTest {
         assertNull(result, "Подзадача не должна добавляться с epicId == own ID");
         assertTrue(inMemoryTaskManager.getSubtasks().isEmpty(), "Список подзадач должен остаться пустым");
     }
+
 }

@@ -7,11 +7,13 @@ import ru.yandex.servise.exception.ManagerSaveException;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
-    private static final String HEADER = "id,type,summary,status,description,epicId";
+    private static final String HEADER = "id,type,summary,status,description,duration,startTime,epicId";
 
     public FileBackedTaskManager(File file) {
         this.file = file;
@@ -119,25 +121,40 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private static Intent fromString(String line) {
         String[] fields = line.split(",");
+
         int id = Integer.parseInt(fields[0]);
         IntentType type = IntentType.valueOf(fields[1]);
         String summary = fields[2];
         Status status = Status.valueOf(fields[3]);
         String description = fields[4];
 
+        // новые поля:
+        int duration = Integer.parseInt(fields[5]);
+        LocalDateTime start = fields[6].equals("null")
+                ? null
+                : LocalDateTime.parse(fields[6]);
+
+        Intent t;
+
         switch (type) {
             case TASK -> {
-                return new Task(id, summary, description, status);
+                t = new Task(id, summary, description, status);
             }
             case EPIC -> {
-                return new Epic(id, summary, description, status);
+                t = new Epic(id, summary, description, status);
             }
             case SUBTASK -> {
-                int epicId = Integer.parseInt(fields[5]);
-                return new Subtask(id, summary, description, status, epicId);
+                int epicId = Integer.parseInt(fields[7]);
+                t = new Subtask(id, summary, description, status, epicId);
             }
             default -> throw new IllegalArgumentException("Неизвестный тип задачи: " + type);
         }
+
+        // устанавливаем новые параметры
+        t.setDuration(duration);
+        t.setStartTime(start);
+
+        return t;
     }
 
     private String toString(Intent intent) {
@@ -145,7 +162,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 intent.getClass().getSimpleName().toUpperCase().replace("TASK", "TASK").replace("EPIC", "EPIC").replace("SUBTASK", "SUBTASK") + "," +
                 intent.getSummary() + "," +
                 intent.getStatus() + "," +
-                intent.getDescription();
+                intent.getDescription() + "," +
+                intent.getDuration() + "," +
+                intent.getStartTime();
 
         if (intent instanceof Subtask subtask) {
             base += "," + subtask.getEpicId();

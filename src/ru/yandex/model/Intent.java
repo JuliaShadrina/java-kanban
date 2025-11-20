@@ -3,24 +3,28 @@ package ru.yandex.model;
 import ru.yandex.model.conctants.Status;
 
 import java.util.Objects;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public abstract class Intent {
     private int id;
     private String summary;
     private String description;
     private Status status;
+    private int duration;
+    private LocalDateTime startTime;
 
     public Intent(String summary, String description) {
         this.summary = summary;
         this.description = description;
-        this.status = status;
+        this.status = Status.NEW;
     }
 
     public Intent(int id, String summary, String description) {
         this.id = id;
         this.summary = summary;
         this.description = description;
-        this.status = status;
+        this.status = Status.NEW;
     }
 
     public Intent(String summary, String description, Status status) {
@@ -34,6 +38,27 @@ public abstract class Intent {
         this.summary = summary;
         this.description = description;
         this.status = status;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null) return null;
+        return startTime.plusMinutes(duration);
     }
 
     public String getSummary() {

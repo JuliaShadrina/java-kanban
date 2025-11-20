@@ -1,10 +1,10 @@
 package ru.yandex.model;
 
-
 import ru.yandex.model.*;
 import ru.yandex.model.conctants.Status;
 import ru.yandex.servise.*;
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +22,8 @@ class TaskTest {
     @Test
     void addNewTaskTest() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
+        task.setDuration(90);
+        task.setStartTime(LocalDateTime.of(2024, 1, 1, 9, 0));
 
         final Task savedTask = inMemoryTaskManager.addTask(task);
         assertNotNull(savedTask, "Задача не найдена.");

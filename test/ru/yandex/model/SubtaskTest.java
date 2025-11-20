@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +26,8 @@ class SubtaskTest {
         Epic epic = new Epic("Test Epic", "Test Epic description");
         inMemoryTaskManager.addEpic(epic);
         Subtask subtask = new Subtask("Подзадача1", "ОписаниеПодзадачи1", Status.NEW, epic.getId());
+        subtask.setDuration(60);
+        subtask.setStartTime(LocalDateTime.of(2024, 1, 1, 10, 0));
 
         final Subtask savedSubtask = inMemoryTaskManager.addSubtask(subtask);
         assertNotNull(savedSubtask, "Сабтаска не найдена.");
@@ -45,6 +48,8 @@ class SubtaskTest {
         Subtask subtask = new Subtask("Invalid Subtask", "Invalid description",
                 Status.NEW, epic.getId()); // Устанавливаем epicId = Id добавленного эпика
         subtask.setId(epic.getId()); // Устанавливаем id подзадачи тоже = Id добавленного эпика
+        subtask.setDuration(45);
+        subtask.setStartTime(LocalDateTime.of(2024, 1, 1, 14, 30));
 
         // Пытаемся добавить подзадачу
         Subtask result = inMemoryTaskManager.addSubtask(subtask);
@@ -53,4 +58,5 @@ class SubtaskTest {
         assertTrue(inMemoryTaskManager.getSubtasks().isEmpty(),
                 "Список подзадач должен остаться пустым после попытки добавить невалидную подзадачу");
     }
+
 }
