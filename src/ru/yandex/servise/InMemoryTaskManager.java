@@ -319,6 +319,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
     }
+
     // Приоретизация
     protected void addPrioritizedTask(Intent task) {
         LocalDateTime startTime = task.getStartTime();
@@ -342,7 +343,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
             LocalDateTime otherStart = other.getStartTime();
-            LocalDateTime otherEnd   = other.getEndTime();
+            LocalDateTime otherEnd = other.getEndTime();
 
             if (otherStart == null || otherEnd == null) {
                 continue; // задачи без времени не участвуют в пересечении
