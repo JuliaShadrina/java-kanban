@@ -2,6 +2,9 @@ package ru.yandex.servise;
 
 import ru.yandex.model.*;
 import ru.yandex.model.conctants.Status;
+import ru.yandex.servise.exception.IntersectionException;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -10,6 +13,15 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private int generationId = 0;
     private HistoryManager historyManager = Managers.getDefaultHistory(); // история полная история просмотров
+    private final TreeSet<Intent> prioritizedTasks =
+            new TreeSet<>(Comparator.comparing(Intent::getStartTime,
+                    Comparator.nullsLast(Comparator.naturalOrder()))
+            );
+
+    @Override
+    public List<Intent> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
+    }
 
     // Получение списков всех типов задач
     @Override
@@ -52,6 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
             epics.put(newEpic.getId(), newEpic);
             updateEpicStatus(newEpic);
+            updateEpicTime(newEpic);
             return newEpic;
         } else {
             return null;
@@ -66,6 +79,7 @@ public class InMemoryTaskManager implements TaskManager {
                 newTask.setId(generateId());
             }
             tasks.put(newTask.getId(), newTask);
+            updatePrioritization(newTask);
             return newTask;
         } else {
             return null;
@@ -78,13 +92,14 @@ public class InMemoryTaskManager implements TaskManager {
         if (isNewIntent(newSubtask)) {
             if (newSubtask.getId() == 0) {
                 newSubtask.setId(generateId());
-                ;
             }
             Epic epic = epics.get(newSubtask.getEpicId());
             if (epic != null) {
                 subtasks.put(newSubtask.getId(), newSubtask);
+                updatePrioritization(newSubtask);
                 epic.setSubtasksIds(newSubtask.getId());
                 updateEpicStatus(epic);
+                updateEpicTime(epic);
             }
             return newSubtask;
         } else {
@@ -117,6 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
             int id = updateEpic.getId();
             epics.put(id, updateEpic);
             updateEpicStatus(updateEpic);
+            updateEpicTime(updateEpic);
             return updateEpic;
         } else {
             return null;
@@ -129,6 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (updateTask != null && tasks.containsKey(updateTask.getId())) {
             int id = updateTask.getId();
             tasks.put(id, updateTask);
+            updatePrioritization(updateTask);
             return updateTask;
         } else {
             return null;
@@ -150,16 +167,19 @@ public class InMemoryTaskManager implements TaskManager {
                 if (oldEpic != null) {
                     oldEpic.getSubtasksIds().remove(Integer.valueOf(id)); // Удаляем сабтаску
                     updateEpicStatus(oldEpic); // Обновляем статус старого эпика
+                    updateEpicTime(oldEpic);
                 }
                 // Привязываем сабтаску к новому эпику
                 Epic newEpic = epics.get(newEpicId);
                 if (newEpic != null) {
                     newEpic.setSubtasksIds(id); // Добавляем сабтаску в новый эпик
                     updateEpicStatus(newEpic); // Обновляем статус нового эпика
+                    updateEpicTime(newEpic);
                 }
             }
             // Обновляем сабтаску
             subtasks.put(id, updateSubtask);
+            updatePrioritization(updateSubtask);
             return updateSubtask;
         } else {
             return null;
@@ -299,6 +319,68 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
     }
+
+    // Приоретизация
+    protected void addPrioritizedTask(Intent task) {
+        LocalDateTime startTime = task.getStartTime();
+        LocalDateTime endTime = task.getEndTime();
+
+        // Если у задачи нет времени — просто добавляем (как в твоей логике)
+        if (startTime == null || endTime == null) {
+            prioritizedTasks.add(task);
+            return;
+        }
+
+        for (Intent other : getPrioritizedTasks()) {
+
+            if (task.equals(other)) {
+                continue; // не сравниваем с самой собой
+            }
+
+            // Эпики не имеют собственного времени → их пропускаем
+            if (other instanceof Epic) {
+                continue;
+            }
+
+            LocalDateTime otherStart = other.getStartTime();
+            LocalDateTime otherEnd = other.getEndTime();
+
+            if (otherStart == null || otherEnd == null) {
+                continue; // задачи без времени не участвуют в пересечении
+            }
+
+            // ЛОГИКА НЕПЕРЕСЕЧЕНИЙ:
+            // если новая задача полностью позже другой
+            if (startTime.isAfter(otherEnd)) {
+                continue;
+            }
+            // если новая задача полностью раньше другой
+            if (endTime.isBefore(otherStart)) {
+                continue;
+            }
+
+            // ЕСЛИ дошли сюда → есть пересечение
+            throw new IntersectionException(
+                    "Задача " + task.getId() +
+                            " пересекается с задачей " + other.getId()
+            );
+        }
+
+        // Если пересечений нет, добавляем в отсортированное множество
+        prioritizedTasks.add(task);
+    }
+
+    private void updatePrioritization(Intent intent) {
+        prioritizedTasks.remove(intent);
+        prioritizedTasks.add(intent);
+    }
+
+    private void updateEpicTime(Epic epic) {
+        List<Subtask> subs = getSubtasksByEpic(epic.getId());
+        epic.calculateTimeAndDuration(subs);
+        updatePrioritization(epic);
+    }
+
 
     // Обновление статуса эпика
     private void updateEpicStatus(Epic epic) {

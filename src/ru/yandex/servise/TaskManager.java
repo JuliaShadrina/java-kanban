@@ -51,6 +51,8 @@ public interface TaskManager {
 
     public void deleteAllSubtasks();
 
+    public List<Intent> getPrioritizedTasks();
+
     List<Intent> getHistory();
 
 }
