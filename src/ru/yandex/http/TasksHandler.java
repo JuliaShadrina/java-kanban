@@ -10,7 +10,6 @@ import ru.yandex.servise.TaskManager;
 import ru.yandex.servise.exception.IntersectionException;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
